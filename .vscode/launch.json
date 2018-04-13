@@ -12,7 +12,11 @@
             "program": "${workspaceFolder}/index.js",
             "restart": true,
             "console": "integratedTerminal",
-            "internalConsoleOptions": "neverOpen"
+            "internalConsoleOptions": "neverOpen",
+            "env": {
+                "NODE_ENV": "development",
+                "PORT": 3000
+            }
         }
     ]
 }
