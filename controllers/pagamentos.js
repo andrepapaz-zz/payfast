@@ -16,6 +16,18 @@ module.exports = (app) => {
     })
 
     app.post('/pagamentos/pagamento', (req, res) => {
+
+        req.assert("forma_de_pagamento", "Forma de pagamento é obrigatório").notEmpty();
+        req.assert("valor", "Valor é obrigatório e deve ser um decimal").notEmpty().isFloat();
+
+        var erros = req.validationErrors();
+
+        if (erros) {
+            console.log('Erros de validação encontrados');
+            res.status(400).send(erros);
+            return;
+        }
+
         let pagamento = req.body;
 
         if (!Object.keys(pagamento).length) {
@@ -31,7 +43,8 @@ module.exports = (app) => {
 
         pagamentoDao.salva(pagamento, (err, resultado) => {
             if (err) {
-                console.log(err);
+                console.log('Erro ao inserir no banco:' + err);
+                res.status(400).send(err);
                 return;
             }
 

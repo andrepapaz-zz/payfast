@@ -7,9 +7,26 @@ function PagamentoDao() {
 
 PagamentoDao.prototype.salva = (pagamento, callback) => {
     connectionFactory((pool) => {
-        var insert = `INSERT INTO pagamentos (forma_de_pagamento, valor, moeda, status, data, descricao) values('${pagamento.forma_de_pagamento}', ${pagamento.valor}, '${pagamento.moeda}', '${pagamento.status}', '${moment(pagamento.data).format('YYYY-MM-DD')}', '${pagamento.descricao}')`;
+        var insert = `INSERT INTO 
+                        pagamentos 
+                            (
+                                forma_de_pagamento, 
+                                valor, 
+                                moeda, 
+                                status, 
+                                data, 
+                                descricao
+                            ) 
+                        values
+                            (
+                                '${pagamento.forma_de_pagamento}', 
+                                ${pagamento.valor}, 
+                                '${pagamento.moeda}', 
+                                '${pagamento.status}', 
+                                '${moment(pagamento.data).format('YYYY-MM-DD')}', 
+                                '${pagamento.descricao}'
+                            )`;
 
-        console.log(insert);
         pool.request().query(insert, callback);
     });
 }
