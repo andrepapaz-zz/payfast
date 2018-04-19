@@ -9,7 +9,7 @@ var config = {
 
 function getPool(callback) {
     var pool = new sql.ConnectionPool(config, err => {
-    
+
         if (err) {
             console.log(err);
             return;
@@ -17,7 +17,7 @@ function getPool(callback) {
 
         callback(pool);
     });
-   
+
 }
 
 module.exports = () => {
