@@ -1,16 +1,31 @@
-function PagamentoDao(connection) {
-    this._connection = connection;
+var connectionFactory = require( './connectionFactory' )();
+var sql = require( 'mssql' );
+var moment = require('moment');
+
+function PagamentoDao() {
 }
 
-PagamentoDao.prototype.salva = (pagamento, callback) => {
-    this._connection.query('INSERT INTO pagamentos SET ?', pagamento, callback);
+PagamentoDao.prototype.salva = ( pagamento, callback ) => {
+    connectionFactory( ( pool ) => {
+        var insert = `INSERT INTO pagamentos (forma_de_pagamento, valor, moeda, status, data, descricao) values('${pagamento.forma_de_pagamento}', ${pagamento.valor}, '${pagamento.moeda}', '${pagamento.status}', '${moment(pagamento.data).format('YYYY-MM-DD')}', '${pagamento.descricao}')`;
+        
+        console.log(insert);
+        pool.request().query( insert, callback );
+    } );
 }
 
-PagamentoDao.prototype.lista = (callback) => {
-    this._connection.query('select * from pagamentos', callback);
+PagamentoDao.prototype.lista = ( callback ) => {
+    connectionFactory( ( pool ) => {
+        pool.request().query( 'select * from pagamentos', callback );
+    } );
 }
 
-PagamentoDao.prototype.buscaPorId = (id, callback) => {
-    this._connection.query('select * from pagamentos where id = ?', id, callback);
+PagamentoDao.prototype.buscaPorId = function (id,callback) {
+    connectionFactory( ( pool ) => {
+        pool.request().query( 'select * from pagamentos where id = ?', [id], callback );
+    } );
 }
 
+module.exports = function() {
+    return PagamentoDao;
+};

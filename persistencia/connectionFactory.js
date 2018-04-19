@@ -1,14 +1,25 @@
-var mysql = require('mysql');
+var sql = require('mssql');
 
-function createDBConnection() {
-    return mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'payfast'
+var config = {
+    user: 'sa',
+    password: '',
+    server: 'localhost',
+    database: 'payfast'
+};
+
+function getPool(callback) {
+    var pool = new sql.ConnectionPool(config, err => {
+    
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        callback(pool);
     });
+   
 }
 
 module.exports = () => {
-    return createDBConnection;
+    return getPool;
 }
