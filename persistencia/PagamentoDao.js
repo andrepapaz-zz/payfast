@@ -25,7 +25,8 @@ PagamentoDao.prototype.salva = (pagamento, callback) => {
                                 '${pagamento.status}', 
                                 '${moment(pagamento.data).format('YYYY-MM-DD')}', 
                                 '${pagamento.descricao}'
-                            )`;
+                            );
+                        select @@IDENTITY AS 'identity'`;
 
         pool.request().query(insert, callback);
     });
@@ -37,9 +38,23 @@ PagamentoDao.prototype.lista = (callback) => {
     });
 }
 
-PagamentoDao.prototype.buscaPorId = function(id, callback) {
+PagamentoDao.prototype.buscaPorId = (id, callback) => {
     connectionFactory((pool) => {
-        pool.request().query('select * from pagamentos where id = ?', [id], callback);
+        pool.request().query(`select * from pagamentos where id = ${id}`, callback);
+    });
+}
+
+PagamentoDao.prototype.atualiza = (pagamento, callback) => {
+    connectionFactory((pool) => {
+
+        var update = `UPDATE
+                            pagamentos
+                        SET
+                            status = '${pagamento.status}'
+                        WHERE
+                            id = ${pagamento.id}`;
+
+        pool.request().query(update, callback);
     });
 }
 
