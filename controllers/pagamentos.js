@@ -112,9 +112,28 @@ module.exports = (app) => {
                 return;
             }
 
+            pagamento.id = resultado.recordset[0].identity;
+
             console.log('Pagamento criado com sucesso.');
-            res.location('/pagamentos/pagamento/' + resultado.recordset[0].identity)
-            res.status(201).json(pagamento);
+            res.location('/pagamentos/pagamento/' + pagamento.id);
+
+            var response = {
+                dados_do_pagamento: pagamento,
+                links: [
+                    {
+                        href: `${req.protocol}://${req.hostname}:${process.env.PORT}/pagamentos/pagamento/${pagamento.id}`,
+                        rel: 'confirmar',
+                        method: 'PUT'
+                    },
+                    {
+                        href: `${req.protocol}://${req.hostname}:${process.env.PORT}/pagamentos/pagamento/${pagamento.id}`,
+                        rel: 'cancelar',
+                        method: 'DELETE'
+                    }
+                ]
+            }
+
+            res.status(201).json(response);
         });
 
     })
