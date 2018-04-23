@@ -7,14 +7,13 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug payfast",
+            "name": "Debug Payfast",
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}/index.js",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "env": {
-                "NODE_ENV": "development",
                 "PORT": 3000
             }
         }
