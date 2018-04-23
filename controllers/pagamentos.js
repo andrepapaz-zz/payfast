@@ -115,7 +115,7 @@ module.exports = (app) => {
             pagamento.id = resultado.recordset[0].identity;
 
             console.log('Pagamento criado com sucesso.');
-            res.location('/pagamentos/pagamento/' + pagamento.id)
+            res.location('/pagamentos/pagamento/' + pagamento.id);
 
             if (pagamento.forma_de_pagamento == 'cartao') {
                 var cartao = req.body.cartao;
@@ -124,9 +124,35 @@ module.exports = (app) => {
 
                 var clienteCartoes = new app.servicos.clienteCartoes();
 
-                clienteCartoes.autoriza(cartao, (error, request, response, retorno) => {
-                    console.log(retorno);
-                    res.status(201).json(retorno);
+                clienteCartoes.autoriza(cartao, (errorCartoes, requestCartoes, responseCartoes, retornoCartoes) => {
+
+                    if (errorCartoes) {
+                        console.log(errorCartoes);
+
+                        res.status(400).send(retornoCartoes);
+                        return;
+                    }
+
+                    console.log(retornoCartoes);
+
+                    var response = {
+                        dados_do_pagamento: pagamento,
+                        cartao: retornoCartoes,
+                        links: [
+                            {
+                                href: `${req.protocol}://${req.hostname}:${process.env.PORT}/pagamentos/pagamento/${pagamento.id}`,
+                                rel: 'confirmar',
+                                method: 'PUT'
+                            },
+                            {
+                                href: `${req.protocol}://${req.hostname}:${process.env.PORT}/pagamentos/pagamento/${pagamento.id}`,
+                                rel: 'cancelar',
+                                method: 'DELETE'
+                            }
+                        ]
+                    }
+        
+                    res.status(201).json(response);
                     return;
                 })
             } else {
