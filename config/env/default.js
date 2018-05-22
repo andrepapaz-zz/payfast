@@ -1,8 +1,8 @@
 module.exports = {
     dbConfig: {
-        user: 'sa',
-        password: '',
-        server: 'localhost',
+        user: 'root',
+        password: 'root',
+        host: '192.168.99.100',
         database: 'payfast'
     },
     cardFastConfig: {

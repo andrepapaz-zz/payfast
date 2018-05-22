@@ -3,16 +3,17 @@ module.exports = (app) => {
     app.get('/pagamentos', (req, res) => {
         console.log('Recebida.');
 
-        var pagamentoDao = new app.persistencia.PagamentoDao();
+        var connection = app.persistencia.connectionFactory();
+        var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
-        pagamentoDao.lista((err, recordset) => {
+        pagamentoDao.lista((err, results, fields) => {
             if (err) {
                 console.log(err);
                 res.status(500).send(err);
                 return;
             }
 
-            res.send(recordset.recordset);
+            res.send(results);
         });
     });
 
@@ -20,16 +21,17 @@ module.exports = (app) => {
         
         var id = req.params.id;
 
-        var pagamentoDao = new app.persistencia.PagamentoDao();
+        var connection = app.persistencia.connectionFactory();
+        var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
-        pagamentoDao.buscaPorId(id, (err, recordset) => {
+        pagamentoDao.buscaPorId(id, (err, result) => {
             if (err) {
                 console.log(err);
                 res.status(500).send(err);
                 return;
             }
 
-            res.send(recordset.recordset[0]);
+            res.send(result[0]);
         });
     });
 
@@ -42,7 +44,8 @@ module.exports = (app) => {
         pagamento.id = id;
         pagamento.status = 'CONFIRMADO';
 
-        var pagamentoDao = new app.persistencia.PagamentoDao();
+        var connection = app.persistencia.connectionFactory();
+        var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
         pagamentoDao.atualiza(pagamento, (err) => {
             if (err) {
@@ -66,7 +69,8 @@ module.exports = (app) => {
         pagamento.id = id;
         pagamento.status = 'CANCELADO';
 
-        var pagamentoDao = new app.persistencia.PagamentoDao();
+        var connection = app.persistencia.connectionFactory();
+        var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
         pagamentoDao.atualiza(pagamento, (err) => {
             if (err) {
@@ -103,7 +107,8 @@ module.exports = (app) => {
         pagamento.status = 'CRIADO';
         pagamento.data = new Date();
 
-        var pagamentoDao = new app.persistencia.PagamentoDao();
+        var connection = app.persistencia.connectionFactory();
+        var pagamentoDao = new app.persistencia.PagamentoDao(connection);
 
         pagamentoDao.salva(pagamento, (err, resultado) => {
             if (err) {
@@ -112,7 +117,7 @@ module.exports = (app) => {
                 return;
             }
 
-            pagamento.id = resultado.recordset[0].identity;
+            pagamento.id = resultado.insertId;
 
             console.log('Pagamento criado com sucesso.');
             res.location('/pagamentos/pagamento/' + pagamento.id);

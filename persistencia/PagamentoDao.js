@@ -1,61 +1,23 @@
-var connectionFactory = require('./connectionFactory')();
-var sql = require('mssql');
 var moment = require('moment');
 
-function PagamentoDao() {
+function PagamentoDao(connection) {
+    this._connection = connection;
 }
 
-PagamentoDao.prototype.salva = (pagamento, callback) => {
-    connectionFactory((pool) => {
-        var insert = `INSERT INTO 
-                        pagamentos 
-                            (
-                                forma_de_pagamento, 
-                                valor, 
-                                moeda, 
-                                status, 
-                                data, 
-                                descricao
-                            ) 
-                        values
-                            (
-                                '${pagamento.forma_de_pagamento}', 
-                                ${pagamento.valor}, 
-                                '${pagamento.moeda}', 
-                                '${pagamento.status}', 
-                                '${moment(pagamento.data).format('YYYY-MM-DD')}', 
-                                '${pagamento.descricao}'
-                            );
-                        select @@IDENTITY AS 'identity'`;
-
-        pool.request().query(insert, callback);
-    });
+PagamentoDao.prototype.salva = function (pagamento, callback) {
+    this._connection.query('INSERT INTO pagamentos SET ?', pagamento, callback);
 }
 
-PagamentoDao.prototype.lista = (callback) => {
-    connectionFactory((pool) => {
-        pool.request().query('select * from pagamentos', callback);
-    });
+PagamentoDao.prototype.lista = function (callback) {
+    this._connection.query("select * from pagamentos",callback);
 }
 
-PagamentoDao.prototype.buscaPorId = (id, callback) => {
-    connectionFactory((pool) => {
-        pool.request().query(`select * from pagamentos where id = ${id}`, callback);
-    });
+PagamentoDao.prototype.buscaPorId = function (id, callback) {
+    this._connection.query("select * from pagamentos where id = ?",[id],callback);
 }
 
-PagamentoDao.prototype.atualiza = (pagamento, callback) => {
-    connectionFactory((pool) => {
-
-        var update = `UPDATE
-                            pagamentos
-                        SET
-                            status = '${pagamento.status}'
-                        WHERE
-                            id = ${pagamento.id}`;
-
-        pool.request().query(update, callback);
-    });
+PagamentoDao.prototype.atualiza = function (pagamento, callback) {
+    this._connection.query('UPDATE pagamentos SET status = ? WHERE id = ?', [pagamento.status, pagamento.id], callback);
 }
 
 module.exports = function() {
