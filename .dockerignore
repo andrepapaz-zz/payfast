@@ -1,5 +1,6 @@
 .history
 .vscode
+.git
 node_modules
 .gitignore
 package-lock.json
