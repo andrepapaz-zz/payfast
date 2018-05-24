@@ -13,3 +13,32 @@ services:
     command: "--innodb_use_native_aio=0"
     ports: 
       - 3306:3306
+    networks: 
+      - production-network
+  cardfast:
+    build: 
+      dockerfile: Dockerfile
+      context: ../cardfast
+    image: andrepapaz/cardfast
+    container_name: cardfast
+    ports:
+      - 3001:3001
+    networks: 
+      - production-network
+  payfast:
+    build: 
+      dockerfile: Dockerfile
+      context: .
+    image: andrepapaz/payfast
+    container_name: payfast
+    ports:
+      - 3000:3000
+    networks: 
+      - production-network
+    depends_on: 
+      - "db"
+      - "cardfast"
+
+networks: 
+  production-network:
+    driver: bridge

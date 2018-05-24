@@ -1,12 +1,15 @@
 module.exports = {
     dbConfig: {
-        user: 'sa',
-        password: '',
-        server: 'localhost',
+        user: 'root',
+        password: 'root',
+        host: 'payfast_db',
         database: 'payfast'
     },
     cardFastConfig: {
-        host: 'localhost',
+        host: 'cardfast',
         port: 3001
+    },
+    correiosSOAPConfig: {
+        wsdl: 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl'
     }
 }

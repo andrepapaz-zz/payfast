@@ -1,9 +1,11 @@
 {
   "name": "payfast",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicação de pagamentos.",
   "main": "index.js",
   "scripts": {
+    "dev": "NODE_ENV=development nodemon index.js",
+    "start": "NODE_ENV=production node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "andrepapaz",
