@@ -2,6 +2,10 @@
   "name": "payfast",
   "version": "1.0.0",
   "description": "Aplicação de pagamentos.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrepapaz/payfast"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon index.js",
