@@ -2,7 +2,7 @@ version: '3'
 services:
   db:
     image: mysql:5.7
-    container_name: payfast_db
+    container_name: payfast-db
     volumes: 
       - ./banco/access/:/etc/access/
       - ./banco/data/:/var/lib/mysql/

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: payfast-pod
+  labels:
+    app: payfast-pod
+spec:
+  containers:
+    - name: payfast-container
+      image: andrepapaz/payfast
+      command: ['npm', 'start']
+      ports:
+        - containerPort: 3000

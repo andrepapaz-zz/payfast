@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payfast-deployment
+spec:
+  selector:
+    matchLabels:
+      name: payfast-pod-dep
+  template:
+    metadata:
+      labels:
+        name: payfast-pod-dep
+    spec:
+      containers:
+        - name: payfast-container
+          image: andrepapaz/payfast
+          command: ['npm', 'start']
+          ports:
+            - containerPort: 3000
